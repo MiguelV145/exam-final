@@ -29,7 +29,7 @@ public class CorsConfig {
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         
         // Permitir envío de credenciales (cookies, headers de autenticación)
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
         
         // Tiempo de cache para preflight (1 hora)
         configuration.setMaxAge(3600L);
