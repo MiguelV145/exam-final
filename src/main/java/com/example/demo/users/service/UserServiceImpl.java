@@ -1,9 +1,14 @@
 package com.example.demo.users.service;
 
+import com.example.demo.portfolio.entity.Portfolio;
+import com.example.demo.portfolio.repository.PortfolioRepository;
+import com.example.demo.profiles.entity.Profile;
+import com.example.demo.profiles.repository.ProfileRepository;
 import com.example.demo.roles.entity.Role;
 import com.example.demo.roles.entity.RoleName;
 import com.example.demo.roles.repository.RoleRepository;
 import com.example.demo.shared.exception.BadRequestException;
+import com.example.demo.shared.exception.ForbiddenException;
 import com.example.demo.shared.exception.ResourceNotFoundException;
 import com.example.demo.users.dto.CreateUserDto;
 import com.example.demo.users.dto.UpdateUserDto;
@@ -16,16 +21,23 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PortfolioRepository portfolioRepository;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, 
+                         PortfolioRepository portfolioRepository, ProfileRepository profileRepository,
+                         PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.portfolioRepository = portfolioRepository;
+        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -94,5 +106,53 @@ public class UserServiceImpl implements UserService {
             roles.add(role);
         }
         return roles;
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDto assignRoles(Long id, Set<RoleName> roleNames) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        // Proteger contra la eliminación del rol ADMIN al usuario ADMIN principal (id=1)
+        if (id.equals(1L) && !roleNames.contains(RoleName.ADMIN)) {
+            throw new ForbiddenException("Cannot remove ADMIN role from the main admin user");
+        }
+        
+        user.setRoles(resolveRoles(roleNames));
+        return UserMapper.toResponse(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDto makeProgrammer(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        // Asignar rol PROGRAMADOR (mantener otros roles)
+        Set<Role> roles = new HashSet<>(user.getRoles());
+        Role programmerRole = roleRepository.findByName(RoleName.PROGRAMADOR)
+            .orElseThrow(() -> new BadRequestException("PROGRAMADOR role not found"));
+        roles.add(programmerRole);
+        user.setRoles(roles);
+        
+        // Crear Portfolio si no existe
+        if (user.getPortfolio() == null) {
+            Portfolio portfolio = new Portfolio();
+            portfolio.setOwner(user);
+            portfolioRepository.save(portfolio);
+            user.setPortfolio(portfolio);
+        }
+        
+        // Crear Profile si no existe
+        if (user.getProfile() == null) {
+            Profile profile = new Profile();
+            profile.setUser(user);
+            profile.setDisplayName(user.getUsername());
+            profileRepository.save(profile);
+            user.setProfile(profile);
+        }
+        
+        return UserMapper.toResponse(userRepository.save(user));
     }
 }

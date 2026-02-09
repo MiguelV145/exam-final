@@ -8,8 +8,10 @@ import java.util.List;
 public interface ProjectService {
     List<ProjectResponseDto> listAll();
     List<ProjectResponseDto> listByPortfolio(Long portfolioId);
+    List<ProjectResponseDto> getMyProjects();
     ProjectResponseDto getById(Long id);
     ProjectResponseDto create(CreateProjectDto request);
     ProjectResponseDto update(Long id, UpdateProjectDto request);
     void delete(Long id);
 }
+

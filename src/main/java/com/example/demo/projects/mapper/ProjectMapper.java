@@ -49,6 +49,13 @@ public final class ProjectMapper {
         }
     }
 
+    /**
+     * Convierte a ProjectResponseDto sin información de likes.
+     * Usa este método cuando no necesites saber si el usuario actual ha hecho like.
+     * 
+     * @param project el proyecto a convertir
+     * @return ProjectResponseDto con likedByMe = null
+     */
     public static ProjectResponseDto toResponse(Project project) {
         Long portfolioId = project.getPortfolio() == null ? null : project.getPortfolio().getId();
         return new ProjectResponseDto(
@@ -62,8 +69,34 @@ public final class ProjectMapper {
             project.getRepoUrl(),
             project.getDemoUrl(),
             project.getImageUrl(),
-            project.getLikeCount()
+            project.getLikeCount(),
+            null // likedByMe no se proporciona sin el servicio
+        );
+    }
+
+    /**
+     * Convierte a ProjectResponseDto con información de likes.
+     * Usa este método cuando necesites incluir si el usuario actual ha hecho like.
+     * 
+     * @param project el proyecto a convertir
+     * @param likedByMe booleano indicando si el usuario actual ha hecho like
+     * @return ProjectResponseDto con likedByMe poblado
+     */
+    public static ProjectResponseDto toResponse(Project project, Boolean likedByMe) {
+        Long portfolioId = project.getPortfolio() == null ? null : project.getPortfolio().getId();
+        return new ProjectResponseDto(
+            project.getId(),
+            portfolioId,
+            project.getTitle(),
+            project.getDescription(),
+            project.getCategory(),
+            project.getRole(),
+            project.getTechnologies(),
+            project.getRepoUrl(),
+            project.getDemoUrl(),
+            project.getImageUrl(),
+            project.getLikeCount(),
+            likedByMe
         );
     }
 }
-
