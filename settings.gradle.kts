@@ -1,1 +1,1 @@
-rootProject.name = "final"
+rootProject.name = "exam-final"
