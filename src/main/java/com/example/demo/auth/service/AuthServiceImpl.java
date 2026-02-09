@@ -35,24 +35,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(RegisterRequestDto request) {
-        // Validar que las contraseñas coincidan
-        if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new IllegalArgumentException("Las contraseñas no coinciden");
-        }
-
-        // Validar que el username no exista
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("El usuario ya existe");
-        }
-
         // Validar que el email no exista
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("El email ya está registrado");
         }
 
+        // Generar username automáticamente del email
+        String username = request.getEmail().split("@")[0];
+        
+        // Validar que el username no exista
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("El usuario ya existe");
+        }
+
         // Crear nuevo usuario
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setUsername(username);
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEnabled(true);
@@ -69,14 +67,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponseDto login(LoginRequestDto request) {
-        // Buscar usuario por username o email
-        User user = userRepository.findByUsername(request.getIdentifier())
-            .or(() -> userRepository.findByEmail(request.getIdentifier()))
-            .orElseThrow(() -> new IllegalArgumentException("Usuario o contraseña inválidos"));
+        // Buscar usuario por email
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new IllegalArgumentException("Email o contraseña inválidos"));
 
         // Validar contraseña
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Usuario o contraseña inválidos");
+            throw new IllegalArgumentException("Email o contraseña inválidos");
         }
 
         // Obtener roles

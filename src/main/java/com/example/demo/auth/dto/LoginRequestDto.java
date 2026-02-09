@@ -1,10 +1,12 @@
 package com.example.demo.auth.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequestDto {
-    @NotBlank(message = "El identificador (email o username) no puede estar vacío")
-    private String identifier;
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El email debe ser válido")
+    private String email;
 
     @NotBlank(message = "La contraseña no puede estar vacía")
     private String password;
@@ -12,17 +14,17 @@ public class LoginRequestDto {
     public LoginRequestDto() {
     }
 
-    public LoginRequestDto(String identifier, String password) {
-        this.identifier = identifier;
+    public LoginRequestDto(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public String getEmail() {
+        return email;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
