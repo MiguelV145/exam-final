@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         // Permitir preflight OPTIONS para CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
                         // Endpoints públicos
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
