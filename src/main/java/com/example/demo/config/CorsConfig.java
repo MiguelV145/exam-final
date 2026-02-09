@@ -7,7 +7,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 public class CorsConfig {
@@ -16,20 +15,34 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Permitir SOLO el frontend en GitHub Pages
-        configuration.setAllowedOrigins(Collections.singletonList("https://miguelv145.github.io"));
+        // Permitir múltiples orígenes
+        configuration.setAllowedOrigins(Arrays.asList(
+            "https://miguelv145.github.io",      // Frontend en GitHub Pages            
+            "http://localhost:4200",              // Frontend local (Angular)
+            "http://localhost:8080"               // Backend local
+        ));
         
         // Métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         
-        // Headers permitidos
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));
+        // Headers permitidos (incluyendo Authorization para JWT)
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "X-Requested-With",
+            "*"
+        ));
         
-        // Headers expuestos para que el frontend pueda leerlos en respuestas
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        // Headers expuestos para que el frontend pueda leerlos
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type",
+            "X-Total-Count"
+        ));
         
-        // Permitir envío de credenciales (cookies, headers de autenticación)
-        configuration.setAllowCredentials(false);
+        // Permitir credenciales (JWT en headers de Authorization)
+        configuration.setAllowCredentials(true);
         
         // Tiempo de cache para preflight (1 hora)
         configuration.setMaxAge(3600L);
