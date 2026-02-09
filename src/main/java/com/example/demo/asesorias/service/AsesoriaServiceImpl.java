@@ -354,46 +354,6 @@ public class AsesoriaServiceImpl implements AsesoriaService {
         }
     }
 
-    /**
-     * Verifica que el usuario actual es ADMIN o el programador asignado de la asesoría.
-     * 
-     * @param asesoria la asesoría a validar
-     * @throws ForbiddenException si el usuario no es ADMIN ni el programador asignado
-     */
-    private void assertProgrammerOwner(Asesoria asesoria) {
-        // ADMIN siempre tiene acceso
-        if (securityUtils.isAdmin()) {
-            return;
-        }
-        
-        Long currentUserId = securityUtils.getCurrentUserId();
-        
-        // Solo el programador asignado
-        if (!asesoria.getProgrammer().getId().equals(currentUserId)) {
-            throw new ForbiddenException("Solo el programador asignado puede realizar esta acción.");
-        }
-    }
-
-    /**
-     * Verifica que el usuario actual es ADMIN o el cliente (asignado) de la asesoría.
-     * 
-     * @param asesoria la asesoría a validar
-     * @throws ForbiddenException si el usuario no es ADMIN ni el cliente asignado
-     */
-    private void assertClientOwner(Asesoria asesoria) {
-        // ADMIN siempre tiene acceso
-        if (securityUtils.isAdmin()) {
-            return;
-        }
-        
-        Long currentUserId = securityUtils.getCurrentUserId();
-        
-        // Solo el cliente asignado
-        if (!asesoria.getClient().getId().equals(currentUserId)) {
-            throw new ForbiddenException("Solo el cliente asignado puede realizar esta acción.");
-        }
-    }
-
     @Override
     @Transactional
     public void delete(Long id) {

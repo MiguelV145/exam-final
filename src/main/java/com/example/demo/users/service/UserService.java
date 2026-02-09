@@ -1,7 +1,6 @@
 package com.example.demo.users.service;
 
 import com.example.demo.roles.entity.RoleName;
-import com.example.demo.users.dto.AssignRolesDto;
 import com.example.demo.users.dto.CreateUserDto;
 import com.example.demo.users.dto.UpdateUserDto;
 import com.example.demo.users.dto.UserResponseDto;

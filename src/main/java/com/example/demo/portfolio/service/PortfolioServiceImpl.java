@@ -8,7 +8,6 @@ import com.example.demo.portfolio.entity.Portfolio;
 import com.example.demo.portfolio.mapper.PortfolioMapper;
 import com.example.demo.portfolio.repository.PortfolioRepository;
 import com.example.demo.profiles.mapper.ProfileMapper;
-import com.example.demo.projects.dto.ProjectResponseDto;
 import com.example.demo.projects.service.ProjectService;
 import com.example.demo.security.SecurityUtils;
 import com.example.demo.shared.exception.BadRequestException;
