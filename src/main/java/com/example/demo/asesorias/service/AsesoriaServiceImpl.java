@@ -189,13 +189,13 @@ public class AsesoriaServiceImpl implements AsesoriaService {
             // PROGRAMADOR solo si es el programador asignado
             if (securityUtils.isProgrammer()) {
                 if (!asesoria.getProgrammer().getId().equals(currentUserId)) {
-                    throw new ForbiddenException("Solo puedes cambiar el estado en asesorías donde eres el programador");
+                    throw new BadRequestException("No tienes permiso para cambiar el estado de esta asesoría. Solo el programador asignado puede hacerlo.");
                 }
             }
             // USER (cliente) solo si es el cliente
             else if (securityUtils.isUser()) {
                 if (!asesoria.getClient().getId().equals(currentUserId)) {
-                    throw new ForbiddenException("Solo puedes cambiar el estado de tus propias asesorías como cliente");
+                    throw new BadRequestException("No tienes permiso para cambiar el estado de esta asesoría. Solo el cliente propietario puede hacerlo.");
                 }
             }
         }
