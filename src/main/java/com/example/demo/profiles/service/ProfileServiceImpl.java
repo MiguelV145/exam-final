@@ -76,7 +76,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
         
         Profile profile = profileRepository.findByUserId(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("Profile not found for user"));
+            .orElseThrow(() -> new ResourceNotFoundException("Perfil no encontrado para el usuario"));
         
         return ProfileMapper.toResponse(profile);
     }

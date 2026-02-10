@@ -50,16 +50,16 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getById(Long id) {
         return userRepository.findById(id)
             .map(UserMapper::toResponse)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
 
     @Override
     public UserResponseDto create(CreateUserDto request) {
         if (userRepository.existsByUsername(request.username())) {
-            throw new BadRequestException("Username already exists");
+            throw new BadRequestException("El nombre de usuario ya existe");
         }
         if (userRepository.existsByEmail(request.email())) {
-            throw new BadRequestException("Email already exists");
+            throw new BadRequestException("El correo electrónico ya existe");
         }
         User user = new User();
         user.setUsername(request.username());
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto update(Long id, UpdateUserDto request) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         if (request.enabled() != null) {
             user.setEnabled(request.enabled());
         }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("Usuario no encontrado");
         }
         userRepository.deleteById(id);
     }
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
     private Set<Role> resolveRoles(Set<RoleName> roleNames) {
         if (roleNames == null || roleNames.isEmpty()) {
             Role defaultRole = roleRepository.findByName(RoleName.USER)
-                .orElseThrow(() -> new BadRequestException("Default role USER not found"));
+                .orElseThrow(() -> new BadRequestException("Rol por defecto USER no encontrado"));
             Set<Role> roles = new HashSet<>();
             roles.add(defaultRole);
             return roles;
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
         for (RoleName roleName : roleNames) {
             Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new BadRequestException("Role not found: " + roleName));
+                .orElseThrow(() -> new BadRequestException("Rol no encontrado: " + roleName));
             roles.add(role);
         }
         return roles;
@@ -112,11 +112,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto assignRoles(Long id, Set<RoleName> roleNames) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         
         // Proteger contra la eliminación del rol ADMIN al usuario ADMIN principal (id=1)
         if (id.equals(1L) && !roleNames.contains(RoleName.ADMIN)) {
-            throw new ForbiddenException("Cannot remove ADMIN role from the main admin user");
+            throw new ForbiddenException("No se puede eliminar el rol ADMIN del usuario administrador principal");
         }
         
         user.setRoles(resolveRoles(roleNames));
@@ -127,12 +127,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto makeProgrammer(Long id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         
         // Asignar rol PROGRAMADOR (mantener otros roles)
         Set<Role> roles = new HashSet<>(user.getRoles());
         Role programmerRole = roleRepository.findByName(RoleName.PROGRAMADOR)
-            .orElseThrow(() -> new BadRequestException("PROGRAMADOR role not found"));
+            .orElseThrow(() -> new BadRequestException("Rol PROGRAMADOR no encontrado"));
         roles.add(programmerRole);
         user.setRoles(roles);
         

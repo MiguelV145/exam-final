@@ -28,4 +28,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     // Listar proyectos de un owner (a través de su portfolio)
     @Query("SELECT p FROM Project p WHERE p.portfolio.owner.id = :ownerId")
     List<Project> findByPortfolioOwnerId(@Param("ownerId") Long ownerId);
+    
+    // Contar proyectos por usuario para reportes
+    @Query("SELECT p.portfolio.owner.id, p.portfolio.owner.username, COUNT(p) " +
+           "FROM Project p " +
+           "GROUP BY p.portfolio.owner.id, p.portfolio.owner.username " +
+           "ORDER BY COUNT(p) DESC")
+    List<Object[]> countProjectsByUser();
 }
