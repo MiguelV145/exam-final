@@ -57,6 +57,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/portfolios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projects/public").permitAll()
                         
+                        // Profile endpoints - Requieren autenticación
+                        .requestMatchers("/api/profile/**", "/api/profiles/**").authenticated()
+                        
+                        // Cualquier otra petición a /api/** requiere autenticación
+                        .requestMatchers("/api/**").authenticated()
+                        
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

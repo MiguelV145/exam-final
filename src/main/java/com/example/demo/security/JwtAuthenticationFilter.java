@@ -61,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 2. Si no hay header, continuar sin autenticación (permitir públicos)
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 logger.debug("│  → Sin token Bearer, permitiendo acceso público");
+                logger.debug("│  SecurityContext antes de continuar: {}", SecurityContextHolder.getContext().getAuthentication());
                 logger.debug("└─");
                 filterChain.doFilter(request, response);
                 return;
@@ -105,12 +106,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             
-            // 6. Evitar sobrescribir autenticación existente
-            if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                logger.debug("│  ⓘ Authentication ya existe en contexto, omitiendo");
-                logger.debug("└─");
-                filterChain.doFilter(request, response);
-                return;
+            // 6. Evitar sobrescribir autenticación existente (pero permitir si es anónima)
+            if (SecurityContextHolder.getContext().getAuthentication() != null 
+                    && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+                String existingAuth = SecurityContextHolder.getContext().getAuthentication().getName();
+                if (!"anonymousUser".equals(existingAuth)) {
+                    logger.debug("│  ⓘ Authentication ya existe en contexto: {}", existingAuth);
+                    logger.debug("└─");
+                    filterChain.doFilter(request, response);
+                    return;
+                }
             }
             
             // 7. ESTRATEGIA A: Construir authorities desde el token
@@ -135,6 +140,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(", ")));
             
+            logger.debug("│  SecurityContext después de auth: {}", 
+                SecurityContextHolder.getContext().getAuthentication().getName());
+            logger.debug("│  isAuthenticated: {}", 
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
             logger.debug("└─");
             
         } catch (Exception e) {
