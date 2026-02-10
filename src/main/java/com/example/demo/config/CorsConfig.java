@@ -22,6 +22,12 @@ public class CorsConfig {
         
         // Permitir múltiples orígenes desde configuración
         configuration.setAllowedOrigins(allowedOrigins);
+
+        configuration.setAllowedOriginPatterns(List.of(
+        "http://localhost:4200",
+        "https://miguelv145.github.io",
+        "https://*.web.app"
+    ));
         
         // Métodos HTTP permitidos
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
