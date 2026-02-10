@@ -209,39 +209,305 @@ http://localhost:8080/swagger-ui/index.html
 - `GET /actuator/health` - Estado de la aplicación (público)
 - `GET /actuator/metrics` - Métricas (ADMIN)
 
-## 🗄️ Estructura del Proyecto
+
+
+## 🧱 Estructura Completa del Repositorio
 
 ```
-src/main/java/com/example/demo/
-├── asesorias/          # Módulo de asesorías
-│   ├── controller/
-│   ├── dto/
-│   ├── entity/
-│   ├── mapper/
-│   ├── repository/
-│   ├── service/
-│   └── scheduler/      # Recordatorios automáticos
-├── availability/       # Módulo de disponibilidad (NUEVO)
-│   ├── controller/
-│   ├── dto/
-│   ├── entity/
-│   ├── mapper/
-│   ├── repository/
-│   └── service/
-├── auth/               # Autenticación
-├── config/             # Configuraciones (Security, CORS, OpenAPI, Scheduling)
-├── portfolio/          # Portafolios
-├── profiles/           # Perfiles de usuario
-├── projects/           # Proyectos
-├── reports/            # Reportes y exportación (NUEVO)
-│   ├── controller/
-│   ├── dto/
-│   └── service/
-├── roles/              # Roles
-├── security/           # JWT
-├── shared/             # Utilidades compartidas
-│   └── exception/
-└── users/              # Usuarios
+exam-final
+├── gradle/
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── public/
+│   └── img/
+│       ├── logoempresA.jpeg
+│       └── logoinstituto.jpg
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/demo/
+│   │   │       ├── asesorias/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   ├── scheduler/
+│   │   │       │   └── service/
+│   │   │       ├── auth/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   └── service/
+│   │   │       ├── availability/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       ├── config/
+│   │   │       ├── portfolio/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       ├── profiles/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       ├── projects/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       ├── reports/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   └── service/
+│   │   │       ├── roles/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       ├── security/
+│   │   │       ├── shared/
+│   │   │       │   └── exception/
+│   │   │       ├── users/
+│   │   │       │   ├── controller/
+│   │   │       │   ├── dto/
+│   │   │       │   ├── entity/
+│   │   │       │   ├── mapper/
+│   │   │       │   ├── repository/
+│   │   │       │   └── service/
+│   │   │       └── FinalApplication.java
+│   │   └── resources/
+│   │       └── application.yaml
+│   └── test/
+│       └── java/com/example/demo/
+│           └── FinalApplicationTests.java
+├── DIAGNOSTICO_SEGURIDAD.md
+├── Dockerfile
+├── GUIA_IMPLEMENTACION.md
+├── LICENSE
+├── README.md
+├── RESPUESTAS_DETALLADAS.md
+├── VERIFICATION_REPORT.txt
+├── build.gradle.kts
+├── gradlew
+├── gradlew.bat
+└── settings.gradle.kts
+```
+
+## 📦 Descripción de DTOs
+
+### Asesorias
+- `AsesoriaMyRequestsResponseDto`: respuesta compuesta con asesorias enviadas y recibidas del usuario actual.
+- `AsesoriaResponseDto`: representación completa de una asesoria para respuestas API.
+- `CancelAsesoriaDto`: payload para cancelar una asesoria con motivo.
+- `CreateAsesoriaDto`: datos necesarios para crear una asesoria.
+- `UpdateAsesoriaDto`: datos editables de una asesoria.
+- `UpdateAsesoriaStatusDto`: cambio de estado de una asesoria (aceptar/rechazar/finalizar).
+
+### Auth
+- `LoginRequestDto`: credenciales para iniciar sesión.
+- `LoginResponseDto`: token y datos básicos del usuario autenticado.
+- `RegisterRequestDto`: datos para registrar un nuevo usuario.
+
+### Availability
+- `AvailabilitySlotCreateDto`: datos para crear un slot de disponibilidad.
+- `AvailabilitySlotResponseDto`: datos de un slot devueltos por la API.
+- `AvailabilitySlotUpdateDto`: actualización de un slot de disponibilidad.
+
+### Portfolio
+- `CreatePortfolioDto`: datos para crear un portafolio.
+- `PortfolioRequest`: estructura interna para requests relacionadas a portafolio.
+- `PortfolioResponseDto`: respuesta con datos completos del portafolio.
+- `PublicPortfolioResponseDto`: respuesta publica con portafolio, perfil y proyectos.
+- `UpdatePortfolioDto`: datos editables de un portafolio.
+
+### Profiles
+- `ProfileMeResponseDto`: respuesta del perfil del usuario actual.
+- `ProfileMeUpdateDto`: datos para actualizar el perfil propio.
+- `ProfileResponseDto`: respuesta de perfil consultado por usuario.
+- `UpdateProfileDto`: datos editables de un perfil.
+
+### Projects
+- `CreateProjectDto`: datos para crear un proyecto.
+- `ProjectResponseDto`: respuesta con datos completos del proyecto.
+- `UpdateProjectDto`: datos editables de un proyecto.
+
+### Reports
+- `AsesoriaDayCountDto`: conteo de asesorias por dia.
+- `AsesoriaProgrammerCountDto`: conteo de asesorias por programador.
+- `AsesoriaStatusCountDto`: conteo de asesorias por estado.
+- `ProjectUserCountDto`: conteo de proyectos por usuario.
+
+### Roles
+- `CreateRoleDto`: payload para crear un rol.
+- `RoleResponseDto`: respuesta con id y nombre del rol.
+
+### Users
+- `AssignRolesDto`: lista de roles para asignar/reemplazar en un usuario.
+- `CreateUserDto`: datos para crear un usuario desde ADMIN.
+- `UpdateUserDto`: datos editables de un usuario.
+- `UserResponseDto`: respuesta con datos del usuario y roles.
+
+## 🔍 Fragmentos de Codigo por Modulo
+
+### Auth (registro)
+```java
+// Asignar rol USER por defecto
+Role userRole = roleRepository.findByName(RoleName.USER)
+   .orElseThrow(() -> new IllegalStateException("Rol USER no encontrado"));
+Set<Role> roles = new HashSet<>();
+roles.add(userRole);
+user.setRoles(roles);
+```
+
+### Users (asignacion de roles)
+```java
+// Proteger contra la eliminacion del rol ADMIN al usuario ADMIN principal (id=1)
+if (id.equals(1L) && !roleNames.contains(RoleName.ADMIN)) {
+   throw new ForbiddenException("No se puede eliminar el rol ADMIN del usuario administrador principal");
+}
+
+user.setRoles(resolveRoles(roleNames));
+```
+
+### Asesorias (creacion con validaciones)
+```java
+User currentUser = securityUtils.getCurrentUser();
+User programmer = userRepository.findById(request.programmerId())
+   .orElseThrow(() -> new ResourceNotFoundException("Programador no encontrado"));
+
+if (!programmer.getRoles().stream()
+      .anyMatch(role -> role.getName() == RoleName.PROGRAMADOR)) {
+   throw new BadRequestException("El usuario especificado no tiene el rol PROGRAMADOR");
+}
+
+if (currentUser.getId().equals(programmer.getId())) {
+   throw new BadRequestException("No puedes crear una asesoria donde el cliente y el programador son la misma persona");
+}
+```
+
+### Availability (validacion de horarios)
+```java
+if (!dto.getEndTime().isAfter(dto.getStartTime())) {
+   throw new IllegalArgumentException("La hora de fin debe ser posterior a la hora de inicio");
+}
+
+List<AvailabilitySlot> overlapping = slotRepository.findOverlappingSlots(
+   currentUser.getId(),
+   dto.getDayOfWeek(),
+   dto.getStartTime(),
+   dto.getEndTime()
+);
+
+if (!overlapping.isEmpty()) {
+   throw new IllegalArgumentException("El horario se superpone con un slot de disponibilidad existente");
+}
+```
+
+### Projects (creacion por rol)
+```java
+Long portfolioId = request.portfolioId();
+
+if (securityUtils.isProgrammer() && !securityUtils.isAdmin()) {
+   Long currentUserId = securityUtils.getCurrentUserId();
+   var portfolio = portfolioRepository.findByOwnerId(currentUserId)
+      .orElseThrow(() -> new ResourceNotFoundException("Portafolio no encontrado para el programador actual"));
+   project.setPortfolio(portfolio);
+} else if (securityUtils.isAdmin() && portfolioId != null) {
+   var portfolio = portfolioRepository.findById(portfolioId)
+      .orElseThrow(() -> new ResourceNotFoundException("Portafolio no encontrado"));
+   project.setPortfolio(portfolio);
+} else {
+   throw new ResourceNotFoundException("Portafolio no especificado o no encontrado");
+}
+```
+
+### Portfolio (publico por username)
+```java
+Portfolio portfolio = portfolioRepository.findByOwnerUsername(username)
+   .orElseThrow(() -> new ResourceNotFoundException("Portafolio no encontrado para el usuario: " + username));
+
+var owner = portfolio.getOwner();
+var profile = owner.getProfile();
+
+if (profile == null) {
+   throw new ResourceNotFoundException("Perfil no encontrado para el usuario: " + username);
+}
+
+var projects = projectService.listByPortfolio(portfolio.getId());
+```
+
+### Profiles (auto-creacion)
+```java
+Profile profile = profileRepository.findByUserId(currentUserId)
+   .orElseGet(() -> {
+      Profile newProfile = new Profile();
+      newProfile.setUser(currentUser);
+      newProfile.setDisplayName(currentUser.getUsername());
+      return profileRepository.save(newProfile);
+   });
+```
+
+### Reports (resumen por estado)
+```java
+LocalDateTime fromDateTime = from.atStartOfDay();
+LocalDateTime toDateTime = to.plusDays(1).atStartOfDay();
+
+List<Object[]> results = asesoriaRepository.countByStatusAndDateRange(fromDateTime, toDateTime);
+
+return results.stream()
+   .map(row -> new AsesoriaStatusCountDto((AsesoriaStatus) row[0], (Long) row[1]))
+   .collect(Collectors.toList());
+```
+
+### Security (authorities desde JWT)
+```java
+private List<GrantedAuthority> buildAuthoritiesFromToken(Set<String> rolesFromToken) {
+   return rolesFromToken.stream()
+         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+         .collect(Collectors.toList());
+}
+```
+
+### Config (seed de roles y admin)
+```java
+for (RoleName roleName : RoleName.values()) {
+   if (roleRepository.findByName(roleName).isEmpty()) {
+      Role role = new Role();
+      role.setName(roleName);
+      roleRepository.save(role);
+   }
+}
+
+if (userRepository.findByUsername(adminUsername).isEmpty()) {
+   User adminUser = new User();
+   adminUser.setUsername(adminUsername);
+   adminUser.setEmail(adminEmail);
+   adminUser.setPassword(passwordEncoder.encode(adminPassword));
+   adminUser.setEnabled(true);
+
+   Role adminRole = roleRepository.findByName(RoleName.ADMIN)
+      .orElseThrow(() -> new IllegalStateException("ADMIN role not found"));
+   Set<Role> roles = new HashSet<>();
+   roles.add(adminRole);
+   adminUser.setRoles(roles);
+
+   userRepository.save(adminUser);
+}
 ```
 
 ## 🐳 Despliegue en Producción
