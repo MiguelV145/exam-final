@@ -58,6 +58,11 @@ public class ProfileServiceImpl implements ProfileService {
         // Actualizar los campos permitidos
         ProfileMapper.updateEntity(request, profile);
         
+        // Asegurar que displayName nunca sea null o blank (usar username como fallback)
+        if (profile.getDisplayName() == null || profile.getDisplayName().isBlank()) {
+            profile.setDisplayName(currentUser.getUsername());
+        }
+        
         return ProfileMapper.toResponse(profileRepository.save(profile));
     }
 
