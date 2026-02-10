@@ -1,17 +1,10 @@
 package com.example.demo.asesorias.entity;
 
+import com.example.demo.availability.entity.Modality;
 import com.example.demo.users.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -21,11 +14,26 @@ public class Asesoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    // Campos legacy (compatibilidad hacia atrás)
+    @Column(nullable = true)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalTime time;
+
+    // Nuevos campos
+    @Column(name = "start_at")
+    private LocalDateTime startAt;
+
+    @Column(name = "duration_minutes")
+    private Integer durationMinutes = 60;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private Modality modality;
+
+    @Column(name = "reminder_sent", nullable = false)
+    private boolean reminderSent = false;
 
     @Column(length = 1000)
     private String comment;
@@ -44,6 +52,27 @@ public class Asesoria {
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        // Si usan date/time legacy, sincronizar con startAt
+        if (startAt == null && date != null && time != null) {
+            startAt = LocalDateTime.of(date, time);
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     public Asesoria() {
     }
@@ -110,5 +139,53 @@ public class Asesoria {
 
     public void setClient(User client) {
         this.client = client;
+    }
+
+    public LocalDateTime getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(LocalDateTime startAt) {
+        this.startAt = startAt;
+    }
+
+    public Integer getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(Integer durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public Modality getModality() {
+        return modality;
+    }
+
+    public void setModality(Modality modality) {
+        this.modality = modality;
+    }
+
+    public boolean isReminderSent() {
+        return reminderSent;
+    }
+
+    public void setReminderSent(boolean reminderSent) {
+        this.reminderSent = reminderSent;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

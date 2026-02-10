@@ -375,7 +375,7 @@ public class AsesoriaServiceImpl implements AsesoriaService {
             }
             if (asesoria.getStatus() != AsesoriaStatus.PENDING) {
                 throw new BadRequestException(
-                    "Client can only delete asesorias in PENDING status. Current status: " + asesoria.getStatus()
+                    "El cliente solo puede eliminar asesorías en estado PENDING. Estado actual: " + asesoria.getStatus()
                 );
             }
             asesoriaRepository.deleteById(id);

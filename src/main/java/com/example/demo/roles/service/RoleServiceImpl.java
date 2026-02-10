@@ -24,6 +24,6 @@ public class RoleServiceImpl implements RoleService {
     public RoleResponseDto getById(Long id) {
         return roleRepository.findById(id)
             .map(RoleMapper::toResponse)
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado"));
     }
 }

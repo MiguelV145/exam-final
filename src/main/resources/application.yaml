@@ -37,3 +37,16 @@ jwt:
     
     # Prefijo del token
     prefix: "Bearer "
+
+# CORS Configuration
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173}
+
+# Email Configuration (optional, already disabled for EmailJS frontend)
+email:
+  enabled: ${EMAIL_ENABLED:false}
+
+# Application Configuration
+app:
+  email:
+    enabled: false  # DESACTIVADO: Backend no envía emails, usa EmailJS en frontend
