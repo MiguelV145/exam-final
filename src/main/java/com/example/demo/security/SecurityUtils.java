@@ -19,7 +19,6 @@ public class SecurityUtils {
     public SecurityUtils(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     /**
      * Obtiene el usuario actualmente autenticado.
      * 
@@ -45,7 +44,6 @@ public class SecurityUtils {
     public Long getCurrentUserId() {
         return getCurrentUser().getId();
     }
-
     /**
      * Verifica si el usuario actual tiene un rol específico.
      * 

@@ -71,7 +71,6 @@ public class JwtUtil {
             return true;
         }
     }
-
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -79,7 +78,6 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
     public String extractTokenFromBearerString(String bearerToken) {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
