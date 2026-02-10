@@ -1,14 +1,18 @@
 package com.example.demo.profiles.entity;
 
 import com.example.demo.users.entity.User;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "profiles")
@@ -31,6 +35,11 @@ public class Profile {
 
     @Column(name = "contact_email", length = 120)
     private String contactEmail;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "profile_skills", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "skill")
+    private List<String> skills;
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
@@ -85,6 +94,14 @@ public class Profile {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
     }
 
     public User getUser() {

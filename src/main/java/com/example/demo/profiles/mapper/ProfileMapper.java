@@ -24,6 +24,9 @@ public final class ProfileMapper {
         if (request.contactEmail() != null) {
             profile.setContactEmail(request.contactEmail());
         }
+        if (request.skills() != null) {
+            profile.setSkills(request.skills());
+        }
     }
 
     public static ProfileResponseDto toResponse(Profile profile) {
@@ -35,7 +38,8 @@ public final class ProfileMapper {
             profile.getPhotoUrl(),
             profile.getSpecialty(),
             profile.getDescription(),
-            profile.getContactEmail()
+            profile.getContactEmail(),
+            profile.getSkills()
         );
     }
 }

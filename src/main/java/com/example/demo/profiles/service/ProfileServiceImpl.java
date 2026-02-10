@@ -92,9 +92,8 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     /**
-     * Obtiene el perfil combinado (Profile + skills de Portfolio) del usuario autenticado.
+     * Obtiene el perfil combinado (Profile + skills) del usuario autenticado.
      * Si el usuario no tiene perfil, se crea automáticamente.
-     * Si el usuario no tiene portfolio, se crea automáticamente.
      */
     @Override
     public ProfileMeResponseDto getMyProfileCombined() {
@@ -107,16 +106,8 @@ public class ProfileServiceImpl implements ProfileService {
                 Profile newProfile = new Profile();
                 newProfile.setUser(currentUser);
                 newProfile.setDisplayName(currentUser.getUsername());
+                newProfile.setSkills(new ArrayList<>());
                 return profileRepository.save(newProfile);
-            });
-        
-        // Obtener o crear el portfolio del usuario
-        Portfolio portfolio = portfolioRepository.findByOwnerId(currentUserId)
-            .orElseGet(() -> {
-                Portfolio newPortfolio = new Portfolio();
-                newPortfolio.setOwner(currentUser);
-                newPortfolio.setSkills(new ArrayList<>());
-                return portfolioRepository.save(newPortfolio);
             });
         
         // Retornar DTO combinado
@@ -126,14 +117,13 @@ public class ProfileServiceImpl implements ProfileService {
             profile.getSpecialty(),
             profile.getDescription(),
             profile.getContactEmail(),
-            portfolio.getSkills()
+            profile.getSkills()
         );
     }
 
     /**
-     * Actualiza el perfil combinado (Profile + skills de Portfolio) del usuario autenticado.
+     * Actualiza el perfil combinado (Profile + skills) del usuario autenticado.
      * Si el usuario no tiene perfil, se crea automáticamente.
-     * Si el usuario no tiene portfolio, se crea automáticamente.
      * Todos los campos del DTO se aplican, pero displayName nunca será null.
      */
     @Override
@@ -148,6 +138,7 @@ public class ProfileServiceImpl implements ProfileService {
                 Profile newProfile = new Profile();
                 newProfile.setUser(currentUser);
                 newProfile.setDisplayName(currentUser.getUsername());
+                newProfile.setSkills(new ArrayList<>());
                 return newProfile;
             });
         
@@ -170,25 +161,13 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setContactEmail(request.contactEmail());
         }
         
-        // Guardar el perfil actualizado
-        profileRepository.save(profile);
-        
-        // Obtener o crear el portfolio del usuario
-        Portfolio portfolio = portfolioRepository.findByOwnerId(currentUserId)
-            .orElseGet(() -> {
-                Portfolio newPortfolio = new Portfolio();
-                newPortfolio.setOwner(currentUser);
-                newPortfolio.setSkills(new ArrayList<>());
-                return newPortfolio;
-            });
-        
         // Actualizar skills si se proporcionan
         if (request.skills() != null) {
-            portfolio.setSkills(request.skills());
+            profile.setSkills(request.skills());
         }
         
-        // Guardar el portfolio actualizado
-        portfolioRepository.save(portfolio);
+        // Guardar el perfil actualizado
+        profileRepository.save(profile);
         
         // Retornar DTO combinado actualizado
         return new ProfileMeResponseDto(
@@ -197,7 +176,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.getSpecialty(),
             profile.getDescription(),
             profile.getContactEmail(),
-            portfolio.getSkills()
+            profile.getSkills()
         );
     }
 }
