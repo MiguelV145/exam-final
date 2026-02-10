@@ -22,23 +22,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Filtro JWT mejorado con mejor manejo de errores y logging detallado.
+ * Filtro JWT mejorado con mejor manejo de errores y logging.
  * 
  * Cambios principales:
  * 1. Logging detallado en TODOS los pasos
- * 2. Construye authorities desde el token (NO depende de BD)
- * 3. Mejor manejo de excepciones con stacktrace visible
+ * 2. Dos estrategias: Cargar UserDetails O construir authorities del token
+ * 3. Mejor manejo de excepciones con stacktrace
  * 4. Validación del token más robusta
  */
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter_MEJORADO extends OncePerRequestFilter {
     
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter_MEJORADO.class);
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter_MEJORADO(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -118,6 +118,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             List<GrantedAuthority> authorities = buildAuthoritiesFromToken(rolesFromToken);
             logger.debug("│  Authorities construidas: {}", authorities);
             
+            // 7b. Alternativa ESTRATEGIA B: Cargar UserDetails de BD
+            // (Descomenta para usar)
+            // List<GrantedAuthority> authorities = loadAuthoritiesFromDatabase(username);
+            
             // 8. Crear y configurar token de autenticación
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(
@@ -146,12 +150,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     
     /**
-     * Construir authorities directamente del JWT token.
+     * Estrategia A: Construir authorities directamente del JWT token.
      * Ventaja: No depende de que el usuario siga existiendo en la BD.
+     * Desventaja: Los roles no se actualizan hasta que el token expire.
      */
     private List<GrantedAuthority> buildAuthoritiesFromToken(Set<String> rolesFromToken) {
         return rolesFromToken.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
+    }
+    
+    /**
+     * Estrategia B: Cargar authorities desde la BD usando UserDetailsService.
+     * Ventaja: Los roles siempre están actualizados.
+     * Desventaja: Si el usuario es eliminado, falla.
+     * 
+     * Descomenta en doFilterInternal() para usar.
+     */
+    @SuppressWarnings("unused")
+    private List<GrantedAuthority> loadAuthoritiesFromDatabase(String username) throws Exception {
+        try {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            logger.debug("│  UserDetails cargado de BD. Authorities: {}", 
+                userDetails.getAuthorities());
+            return userDetails.getAuthorities().stream()
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            logger.error("│  ✗ Error cargando UserDetails para {}: {}", username, e.getMessage());
+            throw e;
+        }
     }
 }

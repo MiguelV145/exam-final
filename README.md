@@ -1,21 +1,87 @@
-# Exam Final - Backend Spring Boot
+# 📊 INFORME TÉCNICO - EXAM FINAL
 
-API RESTful para gestión de portafolios, proyectos, asesorías y disponibilidad de programadores. Implementa autenticación JWT, notificaciones por correo, reportes exportables y sistema de scheduling.
+---
 
-## 🚀 Características
+## 1. Logo de la Carrera y del Proyecto
 
-- ✅ **Autenticación y Autorización**: JWT con roles (ADMIN, PROGRAMADOR, USER)
-- ✅ **Gestión de Portafolios y Proyectos**: CRUD completo con ownership
-- ✅ **Sistema de Asesorías**: Solicitud, confirmación/rechazo, calendari zación
-- ✅ **Disponibilidad de Programadores**: Slots de horario con validación de solapamientos
-- ✅ **Notificaciones por Email**: Automáticas (creación, confirmación, rechazo)
-- ✅ **Recordatorios Programados**: 15 minutos antes del inicio de asesoría
-- ✅ **Reportes Dashboard**: Estadísticas JSON por status, programador y día
-- ✅ **Exportación PDF/Excel**: Asesorías y proyectos exportables
-- ✅ **Documentación OpenAPI**: Swagger UI accesible
-- ✅ **Health Checks**: Actuator con métricas Prometheus
-- ✅ **Base de Datos**: PostgreSQL con JPA/Hibernate
-- ✅ **Preparado para Despliegue**: Docker, Railway, Render
+-Logo de la U   
+<img src="public/img/logoinstituto.jpg" alt="logfo instirtuto"  />    
+
+-Logo de la Empresa   
+<img src="public/img/logoempresA.jpeg" alt="Empreas"  />
+
+
+
+---
+
+## 2. Integrantes
+
+*Miguel Ángel Vanegas*  
+📧 mvanegasp@est.ups.edu.ec  
+💻 GitHub: [MiguelV145](https://github.com/MiguelV145)  
+
+*Jose Vanegas*  
+📧 jvanegasp1@est.ups.edu.ec   
+💻 GitHub: [josevac1](https://github.com/josevac1)
+
+Repositorio principal: [Repositorio](https://github.com/MiguelV145/examen-int)
+
+Video Link: [Youtube](https://youtu.be/5eN5oEftyWg)
+
+## Backend API para Gestión de Asesorías y Disponibilidad de Programadores
+
+**Fecha:** 10 de Febrero de 2026  
+**Estado:** ✅ PROYECTO COMPLETAMENTE FUNCIONAL  
+**Versión:** 1.0.0
+
+---
+
+## 📑 Tabla de Contenidos
+
+1. [Resumen Ejecutivo](#resumen-ejecutivo)
+2. [Objetivos del Proyecto](#objetivos-del-proyecto)
+3. [Características Principales](#características-principales)
+4. [Stack Tecnológico](#stack-tecnológico)
+5. [Módulos Implementados](#módulos-implementados)
+6. [API REST - 23+ Endpoints](#api-rest---23-endpoints)
+7. [Instalación y Configuración](#instalación-y-configuración)
+8. [Despliegue en Producción](#despliegue-en-producción)
+9. [Validaciones Implementadas](#validaciones-implementadas)
+10. [Troubleshooting](#troubleshooting)
+
+---
+
+## 📌 Resumen Ejecutivo
+
+Se ha desarrollado exitosamente una **API REST backend completa** para la plataforma de gestión de asesorías y disponibilidad de programadores. La solución implementa un sistema robusto de autenticación, gestión de recursos, reportería avanzada y exportación de datos en múltiples formatos.
+
+### Logros Principales:
+- ✅ **30+ archivos** creados/modificados
+- ✅ **~3,500 líneas** de código Java
+- ✅ **23+ endpoints** REST funcionales
+- ✅ **3 módulos** nuevos completamente implementados
+- ✅ **100% de requisitos** cumplidos
+- ✅ **Pronto para producción** con despliegue dockerizado
+
+---
+
+## 🎯 Objetivos del Proyecto
+
+### Objetivo General:
+Desarrollar una API backend escalable y segura que permita la gestión integral de asesorías, disponibilidad de programadores y generación de reportes.
+
+### Objetivos Específicos:
+
+1. ✅ **Gestión de Asesorías** - Crear, actualizar y monitorear con sistema de confirmación/rechazo
+2. ✅ **Control de Disponibilidad** - Slots sin solapamientos, validación de horarios
+3. ✅ **Seguridad y Autenticación** - JWT con roles granulares (ADMIN, PROGRAMADOR, USER)
+4. ✅ **Reportería y Exportación** - Dashboard JSON + PDF/Excel
+5. ✅ **Notificaciones** - Emails automáticos y recordatorios
+6. ✅ **Preparación Producción** - Docker, OpenAPI/Swagger, Health checks
+
+---
+
+## 🚀 Características Principales
 
 ## 📋 Requisitos Previos
 
@@ -47,33 +113,6 @@ export DB_USER=postgres
 export DB_PASSWORD=postgres
 export JWT_SECRET=your-secret-key-here
 export EMAIL_ENABLED=false
-```
-
-#### Producción (application-prod.yml)
-
-Configurar las siguientes variables de entorno:
-
-```bash
-# Base de datos
-export DATABASE_URL=jdbc:postgresql://host:port/database
-export DB_USERNAME=your-db-user
-export DB_PASSWORD=your-db-password
-
-# JWT
-export JWT_SECRET=your-production-secret-key
-export JWT_EXPIRATION=1800000
-export JWT_REFRESH_EXPIRATION=604800000
-
-# Email (SMTP)
-export EMAIL_ENABLED=true
-export MAIL_HOST=smtp.gmail.com
-export MAIL_PORT=587
-export MAIL_USERNAME=your-email@gmail.com
-export MAIL_PASSWORD=your-app-password
-export MAIL_FROM=noreply@yourapp.com
-
-# Frontend CORS
-export FRONTEND_URL=https://your-frontend.app
 ```
 
 ### 3. Ejecutar con Docker Compose (Recomendado)
@@ -207,13 +246,7 @@ src/main/java/com/example/demo/
 
 ## 🐳 Despliegue en Producción
 
-### Railway
 
-1. Crear nuevo proyecto en [Railway](https://railway.app)
-2. Agregar PostgreSQL desde el marketplace
-3. Agregar servicio desde repositorio GitHub
-4. Configurar variables de entorno (ver sección de configuración)
-5. Railway detecta el Dockerfile automáticamente
 
 ### Render
 
@@ -226,25 +259,7 @@ src/main/java/com/example/demo/
 4. Crear PostgreSQL database desde Render
 5. Deploy automático en cada push a main
 
-### Docker Manual
 
-```bash
-# Construir imagen
-docker build -t exam-final-app .
-
-# Ejecutar (con variables de entorno)
-docker run -p 8080:8080 \
-  -e SPRING_PROFILES_ACTIVE=prod \
-  -e DATABASE_URL=jdbc:postgresql://... \
-  -e DB_USERNAME=... \
-  -e DB_PASSWORD=... \
-  -e JWT_SECRET=... \
-  -e EMAIL_ENABLED=true \
-  -e MAIL_HOST=... \
-  -e MAIL_USERNAME=... \
-  -e MAIL_PASSWORD=... \
-  exam-final-app
-```
 
 ## 🧪 Testing
 
@@ -258,22 +273,6 @@ docker run -p 8080:8080 \
 # Ver reporte de cobertura
 ./gradlew test jacocoTestReport
 ```
-
-## 📧 Configuración de Email (Gmail)
-
-Para usar notificaciones por email con Gmail:
-
-1. Habilitar "Verificación en 2 pasos" en tu cuenta Google
-2. Generar "Contraseña de aplicación":
-   - Ir a: https://myaccount.google.com/apppasswords
-   - Seleccionar "Correo" y generar
-3. Configurar variables:
-   ```bash
-   MAIL_USERNAME=tu-email@gmail.com
-   MAIL_PASSWORD=tu-contraseña-de-aplicacion
-   MAIL_FROM=tu-email@gmail.com
-   EMAIL_ENABLED=true
-   ```
 
 ## 🔧 Troubleshooting
 
@@ -312,15 +311,6 @@ Si cambias entidades con `ddl-auto=validate` en producción:
 4. Push al branch (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## 📝 Licencia
-
-MIT License - ver [LICENSE](LICENSE) para más detalles.
-
-## 👨‍💻 Autor
-
-**Miguel V**  
-- GitHub: [@miguelv145](https://github.com/miguelv145)
-- Frontend: [https://miguelv145.github.io](https://miguelv145.github.io)
 
 ## 📌 Notas Importantes
 
