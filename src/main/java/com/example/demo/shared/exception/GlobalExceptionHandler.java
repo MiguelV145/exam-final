@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
-        String message = "Database constraint violation: " + (ex.getCause() != null ? ex.getCause().getMessage() : "Unknown database constraint error");
+        String message = "Datos invalidos: uno o mas campos requeridos estan vacios o violan restricciones.";
         return buildError(HttpStatus.BAD_REQUEST, message, request.getRequestURI());
     }
 

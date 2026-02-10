@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  *          http://localhost:8080/api/profile/me
  */
 @RestController
-@RequestMapping("/api/profile")
+@RequestMapping({"/api/profile", "/api/profiles"})
 public class ProfileMeController {
     
     private final ProfileService profileService;

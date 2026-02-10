@@ -1,5 +1,7 @@
 package com.example.demo.profiles.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * Ejemplo:
  * {
  *   "displayName": "Juan Pérez",
- *   "photoUrl": "https://...",
+ *   "photoURL": "https://...",
  *   "specialty": "Backend Java",
  *   "description": "Especialista en Spring Boot",
  *   "contactEmail": "juan@example.com",
@@ -18,6 +20,8 @@ import java.util.List;
  */
 public record ProfileMeUpdateDto(
     String displayName,
+    @JsonProperty("photoURL")
+    @JsonAlias({"photoUrl"})
     String photoUrl,
     String specialty,
     String description,
