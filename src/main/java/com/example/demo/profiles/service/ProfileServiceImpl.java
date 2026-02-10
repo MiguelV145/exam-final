@@ -1,5 +1,9 @@
 package com.example.demo.profiles.service;
 
+import com.example.demo.portfolio.entity.Portfolio;
+import com.example.demo.portfolio.repository.PortfolioRepository;
+import com.example.demo.profiles.dto.ProfileMeResponseDto;
+import com.example.demo.profiles.dto.ProfileMeUpdateDto;
 import com.example.demo.profiles.dto.ProfileResponseDto;
 import com.example.demo.profiles.dto.UpdateProfileDto;
 import com.example.demo.profiles.entity.Profile;
@@ -9,6 +13,8 @@ import com.example.demo.security.SecurityUtils;
 import com.example.demo.shared.exception.ForbiddenException;
 import com.example.demo.shared.exception.ResourceNotFoundException;
 import com.example.demo.users.entity.User;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileServiceImpl implements ProfileService {
     
     private final ProfileRepository profileRepository;
+    private final PortfolioRepository portfolioRepository;
     private final SecurityUtils securityUtils;
 
-    public ProfileServiceImpl(ProfileRepository profileRepository, SecurityUtils securityUtils) {
+    public ProfileServiceImpl(ProfileRepository profileRepository, 
+                            PortfolioRepository portfolioRepository,
+                            SecurityUtils securityUtils) {
         this.profileRepository = profileRepository;
+        this.portfolioRepository = portfolioRepository;
         this.securityUtils = securityUtils;
     }
 
@@ -79,5 +89,115 @@ public class ProfileServiceImpl implements ProfileService {
             .orElseThrow(() -> new ResourceNotFoundException("Perfil no encontrado para el usuario"));
         
         return ProfileMapper.toResponse(profile);
+    }
+
+    /**
+     * Obtiene el perfil combinado (Profile + skills de Portfolio) del usuario autenticado.
+     * Si el usuario no tiene perfil, se crea automáticamente.
+     * Si el usuario no tiene portfolio, se crea automáticamente.
+     */
+    @Override
+    public ProfileMeResponseDto getMyProfileCombined() {
+        User currentUser = securityUtils.getCurrentUser();
+        Long currentUserId = currentUser.getId();
+        
+        // Obtener o crear el perfil del usuario
+        Profile profile = profileRepository.findByUserId(currentUserId)
+            .orElseGet(() -> {
+                Profile newProfile = new Profile();
+                newProfile.setUser(currentUser);
+                newProfile.setDisplayName(currentUser.getUsername());
+                return profileRepository.save(newProfile);
+            });
+        
+        // Obtener o crear el portfolio del usuario
+        Portfolio portfolio = portfolioRepository.findByOwnerId(currentUserId)
+            .orElseGet(() -> {
+                Portfolio newPortfolio = new Portfolio();
+                newPortfolio.setOwner(currentUser);
+                newPortfolio.setSkills(new ArrayList<>());
+                return portfolioRepository.save(newPortfolio);
+            });
+        
+        // Retornar DTO combinado
+        return new ProfileMeResponseDto(
+            profile.getDisplayName(),
+            profile.getPhotoUrl(),
+            profile.getSpecialty(),
+            profile.getDescription(),
+            profile.getContactEmail(),
+            portfolio.getSkills()
+        );
+    }
+
+    /**
+     * Actualiza el perfil combinado (Profile + skills de Portfolio) del usuario autenticado.
+     * Si el usuario no tiene perfil, se crea automáticamente.
+     * Si el usuario no tiene portfolio, se crea automáticamente.
+     * Todos los campos del DTO se aplican, pero displayName nunca será null.
+     */
+    @Override
+    @Transactional
+    public ProfileMeResponseDto updateMyProfileCombined(ProfileMeUpdateDto request) {
+        User currentUser = securityUtils.getCurrentUser();
+        Long currentUserId = currentUser.getId();
+        
+        // Obtener o crear el perfil del usuario
+        Profile profile = profileRepository.findByUserId(currentUserId)
+            .orElseGet(() -> {
+                Profile newProfile = new Profile();
+                newProfile.setUser(currentUser);
+                newProfile.setDisplayName(currentUser.getUsername());
+                return newProfile;
+            });
+        
+        // Actualizar campos del perfil si se proporcionan
+        if (request.displayName() != null && !request.displayName().isBlank()) {
+            profile.setDisplayName(request.displayName());
+        } else {
+            profile.setDisplayName(currentUser.getUsername()); // Fallback
+        }
+        if (request.photoUrl() != null) {
+            profile.setPhotoUrl(request.photoUrl());
+        }
+        if (request.specialty() != null) {
+            profile.setSpecialty(request.specialty());
+        }
+        if (request.description() != null) {
+            profile.setDescription(request.description());
+        }
+        if (request.contactEmail() != null) {
+            profile.setContactEmail(request.contactEmail());
+        }
+        
+        // Guardar el perfil actualizado
+        profileRepository.save(profile);
+        
+        // Obtener o crear el portfolio del usuario
+        Portfolio portfolio = portfolioRepository.findByOwnerId(currentUserId)
+            .orElseGet(() -> {
+                Portfolio newPortfolio = new Portfolio();
+                newPortfolio.setOwner(currentUser);
+                newPortfolio.setSkills(new ArrayList<>());
+                return newPortfolio;
+            });
+        
+        // Actualizar skills si se proporcionan
+        if (request.skills() != null) {
+            portfolio.setSkills(request.skills());
+        }
+        
+        // Guardar el portfolio actualizado
+        portfolioRepository.save(portfolio);
+        
+        // Retornar DTO combinado actualizado
+        return new ProfileMeResponseDto(
+            profile.getDisplayName(),
+            profile.getPhotoUrl(),
+            profile.getSpecialty(),
+            profile.getDescription(),
+            profile.getContactEmail(),
+            portfolio.getSkills()
+        );
     }
 }
