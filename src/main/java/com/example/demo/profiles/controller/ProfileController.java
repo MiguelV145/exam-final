@@ -24,13 +24,11 @@ public class ProfileController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProfileResponseDto> getMyProfile() {
         return ResponseEntity.ok(profileService.getMyProfile());
     }
 
     @PutMapping("/me")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProfileResponseDto> updateMyProfile(@Valid @RequestBody UpdateProfileDto request) {
         return ResponseEntity.ok(profileService.updateMyProfile(request));
     }
