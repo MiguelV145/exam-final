@@ -42,7 +42,7 @@ public class AvailabilitySlotServiceImpl implements AvailabilitySlotService {
         // Validar solapamientos
         List<AvailabilitySlot> overlapping = slotRepository.findOverlappingSlots(
             currentUser.getId(),
-            dto.getDayOfWeek(),
+            dto.getDayOfWeek().toJava(),
             dto.getStartTime(),
             dto.getEndTime()
         );

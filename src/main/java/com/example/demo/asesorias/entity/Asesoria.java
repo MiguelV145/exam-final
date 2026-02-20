@@ -32,6 +32,12 @@ public class Asesoria {
     @Column(length = 20)
     private Modality modality;
 
+    @Column(length = 255)
+    private String topic;
+
+    @Column(length = 1000)
+    private String notes;
+
     @Column(name = "reminder_sent", nullable = false)
     private boolean reminderSent = false;
 
@@ -67,6 +73,16 @@ public class Asesoria {
         if (startAt == null && date != null && time != null) {
             startAt = LocalDateTime.of(date, time);
         }
+        if (startAt != null && (date == null || time == null)) {
+            date = startAt.toLocalDate();
+            time = startAt.toLocalTime();
+        }
+        if (notes == null && comment != null) {
+            notes = comment;
+        }
+        if (comment == null && notes != null) {
+            comment = notes;
+        }
     }
 
     @PreUpdate
@@ -91,6 +107,9 @@ public class Asesoria {
 
     public void setDate(LocalDate date) {
         this.date = date;
+        if (this.date != null && this.time != null) {
+            this.startAt = LocalDateTime.of(this.date, this.time);
+        }
     }
 
     public LocalTime getTime() {
@@ -99,6 +118,9 @@ public class Asesoria {
 
     public void setTime(LocalTime time) {
         this.time = time;
+        if (this.date != null && this.time != null) {
+            this.startAt = LocalDateTime.of(this.date, this.time);
+        }
     }
 
     public String getComment() {
@@ -107,6 +129,9 @@ public class Asesoria {
 
     public void setComment(String comment) {
         this.comment = comment;
+        if (this.notes == null) {
+            this.notes = comment;
+        }
     }
 
     public AsesoriaStatus getStatus() {
@@ -147,6 +172,10 @@ public class Asesoria {
 
     public void setStartAt(LocalDateTime startAt) {
         this.startAt = startAt;
+        if (startAt != null) {
+            this.date = startAt.toLocalDate();
+            this.time = startAt.toLocalTime();
+        }
     }
 
     public Integer getDurationMinutes() {
@@ -163,6 +192,25 @@ public class Asesoria {
 
     public void setModality(Modality modality) {
         this.modality = modality;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+        if (this.comment == null) {
+            this.comment = notes;
+        }
     }
 
     public boolean isReminderSent() {

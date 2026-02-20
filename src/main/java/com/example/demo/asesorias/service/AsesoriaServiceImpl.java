@@ -126,9 +126,11 @@ public class AsesoriaServiceImpl implements AsesoriaService {
         
         // Crear la asesoría
         Asesoria asesoria = new Asesoria();
-        asesoria.setDate(request.date());
-        asesoria.setTime(request.time());
-        asesoria.setComment(request.comment());
+        asesoria.setStartAt(request.startAt());
+        asesoria.setDurationMinutes(request.durationMinutes());
+        asesoria.setModality(request.modality());
+        asesoria.setTopic(request.topic());
+        asesoria.setNotes(request.notes());
         asesoria.setClient(currentUser);
         asesoria.setProgrammer(programmer);
         asesoria.setStatus(AsesoriaStatus.PENDING);
@@ -160,14 +162,20 @@ public class AsesoriaServiceImpl implements AsesoriaService {
         }
         
         // Actualizar solo los campos permitidos
-        if (request.date() != null) {
-            asesoria.setDate(request.date());
+        if (request.startAt() != null) {
+            asesoria.setStartAt(request.startAt());
         }
-        if (request.time() != null) {
-            asesoria.setTime(request.time());
+        if (request.durationMinutes() != null) {
+            asesoria.setDurationMinutes(request.durationMinutes());
         }
-        if (request.comment() != null) {
-            asesoria.setComment(request.comment());
+        if (request.modality() != null) {
+            asesoria.setModality(request.modality());
+        }
+        if (request.topic() != null) {
+            asesoria.setTopic(request.topic());
+        }
+        if (request.notes() != null) {
+            asesoria.setNotes(request.notes());
         }
         
         return AsesoriaMapper.toResponse(asesoriaRepository.save(asesoria));

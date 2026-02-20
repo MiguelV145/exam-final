@@ -1,17 +1,33 @@
 package com.example.demo.asesorias.dto;
 
+import com.example.demo.availability.entity.Modality;
 import com.example.demo.asesorias.entity.AsesoriaStatus;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record AsesoriaResponseDto(
     Long id,
-    LocalDate date,
-    LocalTime time,
-    String comment,
+    LocalDateTime startAt,
+    Integer durationMinutes,
+    Modality modality,
     AsesoriaStatus status,
+    String topic,
+    String notes,
     String responseMsg,
-    Long programmerId,
-    Long clientId
+    ProgrammerSummaryDto programmer,
+    ClientSummaryDto client
 ) {
+    public record ProgrammerSummaryDto(
+        Long id,
+        String username,
+        String email,
+        String displayName
+    ) {
+    }
+
+    public record ClientSummaryDto(
+        Long id,
+        String username,
+        String email
+    ) {
+    }
 }

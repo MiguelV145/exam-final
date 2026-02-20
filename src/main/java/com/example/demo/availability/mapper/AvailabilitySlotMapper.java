@@ -3,6 +3,7 @@ package com.example.demo.availability.mapper;
 import com.example.demo.availability.dto.AvailabilitySlotCreateDto;
 import com.example.demo.availability.dto.AvailabilitySlotResponseDto;
 import com.example.demo.availability.dto.AvailabilitySlotUpdateDto;
+import com.example.demo.availability.dto.DayOfWeekEs;
 import com.example.demo.availability.entity.AvailabilitySlot;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ public class AvailabilitySlotMapper {
     
     public AvailabilitySlot toEntity(AvailabilitySlotCreateDto dto) {
         AvailabilitySlot slot = new AvailabilitySlot();
-        slot.setDayOfWeek(dto.getDayOfWeek());
+        slot.setDayOfWeek(dto.getDayOfWeek() != null ? dto.getDayOfWeek().toJava() : null);
         slot.setStartTime(dto.getStartTime());
         slot.setEndTime(dto.getEndTime());
         slot.setModality(dto.getModality());
@@ -24,7 +25,7 @@ public class AvailabilitySlotMapper {
         dto.setId(slot.getId());
         dto.setProgrammerId(slot.getProgrammer().getId());
         dto.setProgrammerUsername(slot.getProgrammer().getUsername());
-        dto.setDayOfWeek(slot.getDayOfWeek());
+        dto.setDayOfWeek(DayOfWeekEs.fromJava(slot.getDayOfWeek()));
         dto.setStartTime(slot.getStartTime());
         dto.setEndTime(slot.getEndTime());
         dto.setModality(slot.getModality());
@@ -36,7 +37,7 @@ public class AvailabilitySlotMapper {
     
     public void updateEntityFromDto(AvailabilitySlot slot, AvailabilitySlotUpdateDto dto) {
         if (dto.getDayOfWeek() != null) {
-            slot.setDayOfWeek(dto.getDayOfWeek());
+            slot.setDayOfWeek(dto.getDayOfWeek().toJava());
         }
         if (dto.getStartTime() != null) {
             slot.setStartTime(dto.getStartTime());

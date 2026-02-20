@@ -6,6 +6,12 @@ public enum AsesoriaStatus {
     REJECTED,
     CANCELED,
     FINISHED,
+    PENDIENTE,
+    CONFIRMADA,
+    EN_CURSO,
+    COMPLETADA,
+    CANCELADA,
+    RECHAZADA,
     // Mantener compatibilidad con valores anteriores
     PENDING,
     APPROVED,

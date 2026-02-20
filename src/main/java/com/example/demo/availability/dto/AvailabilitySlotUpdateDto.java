@@ -1,12 +1,11 @@
 package com.example.demo.availability.dto;
 
 import com.example.demo.availability.entity.Modality;
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class AvailabilitySlotUpdateDto {
     
-    private DayOfWeek dayOfWeek;
+    private DayOfWeekEs dayOfWeek;
     private LocalTime startTime;
     private LocalTime endTime;
     private Modality modality;
@@ -15,11 +14,11 @@ public class AvailabilitySlotUpdateDto {
     public AvailabilitySlotUpdateDto() {
     }
 
-    public DayOfWeek getDayOfWeek() {
+    public DayOfWeekEs getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+    public void setDayOfWeek(DayOfWeekEs dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 

@@ -2,13 +2,12 @@ package com.example.demo.availability.dto;
 
 import com.example.demo.availability.entity.Modality;
 import jakarta.validation.constraints.NotNull;
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class AvailabilitySlotCreateDto {
     
     @NotNull(message = "El día de la semana es requerido")
-    private DayOfWeek dayOfWeek;
+    private DayOfWeekEs dayOfWeek;
     
     @NotNull(message = "La hora de inicio es requerida")
     private LocalTime startTime;
@@ -24,11 +23,11 @@ public class AvailabilitySlotCreateDto {
     public AvailabilitySlotCreateDto() {
     }
 
-    public DayOfWeek getDayOfWeek() {
+    public DayOfWeekEs getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+    public void setDayOfWeek(DayOfWeekEs dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
     }
 
